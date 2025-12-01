@@ -5,14 +5,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Puzzle Quiz</title>
 <style>
-  body { font-family: Arial; display:flex; flex-direction:column; align-items:center; margin:20px; }
-  #puzzle-container { position:relative; width:400px; height:400px; border:2px solid #ccc; background-size:cover; background-position:center; }
-  .piece { position:absolute; width:25%; height:25%; border:1px solid white; cursor:pointer; background-color:rgba(0,0,150,0.8); transition:0.3s; }
-  .piece:hover { transform: scale(1.05); }
-  .hidden { opacity:0; pointer-events:none; }
-  .failed { background-color:rgba(120,120,120,0.8); }
-  #question-box { display:none; margin-top:15px; padding:10px; background:white; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1); }
-  input, button { margin:5px; padding:6px 10px; }
+  body {
+    font-family: Arial, sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin:20px;
+  }
+
+  #puzzle-container {
+    position:relative;
+    width:400px;
+    height:400px;
+    border:2px solid #ccc;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .piece {
+    position:absolute;
+    cursor:pointer;
+    border:1px solid white;
+    transition: 0.3s;
+  }
+
+  .piece:hover {
+    transform: scale(1.05);
+  }
+
+  .piece.failed {
+    background-color: rgba(40,40,40,0.9); /* pezzo sbagliato, grigio scuro */
+  }
+
+  .piece.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #question-box {
+    display:none;
+    margin-top:15px;
+    padding:10px;
+    background:white;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+  }
+
+  input, button {
+    margin:5px;
+    padding:6px 10px;
+  }
 </style>
 </head>
 <body>
@@ -37,11 +79,10 @@ const cancelBtn = document.getElementById("cancel-btn");
 
 let selectedPiece = null;
 
-// Only the creator defines the image and questions
-const imageUrl = "https://media-assets.vanityfair.it/photos/672f782d22f064101b9b5d29/master/w_1600%2Cc_limit/50%2520anni%2520di%2520Leonardo%2520DiCaprio_curiosit%25C3%25A0-Academy%2520of%2520Motion%2520Picture%2520Arts%25202024.jpg"; // your uploaded image URL
+// --- Image and questions (creator only) ---
+const imageUrl = "https://i.imgur.com/yourimage.jpg"; // inserisci qui l'immagine del puzzle
 puzzleContainer.style.backgroundImage = `url('${imageUrl}')`;
 
-// Questions for each piece (16 pieces)
 const questions = [
   { q: "Qual è la capitale d’Italia?", a: "Roma" },
   { q: "Quanto fa 7×8?", a: "56" },
@@ -55,53 +96,5 @@ const questions = [
   { q: "Monte più alto d’Italia?", a: "Monte Bianco" },
   { q: "Inventore del telefono?", a: "Bell" },
   { q: "Simbolo chimico oro?", a: "Au" },
-  { q: "Pianeta più vicino al Sole?", a: "Mercurio" },
-  { q: "Lingua più parlata nel mondo?", a: "Inglese" },
-  { q: "Anno della scoperta dell’America?", a: "1492" },
-  { q: "Autore di Pinocchio?", a: "Collodi" }
-];
-
-// Create 4x4 puzzle pieces
-for (let r=0; r<4; r++) {
-  for (let c=0; c<4; c++) {
-    const i = r*4 + c;
-    const piece = document.createElement("div");
-    piece.classList.add("piece");
-    piece.style.top = r*25 + "%";
-    piece.style.left = c*25 + "%";
-    piece.addEventListener("click", () => openQuestion(piece, i));
-    puzzleContainer.appendChild(piece);
-  }
-}
-
-function openQuestion(piece, index) {
-  selectedPiece = piece;
-  questionBox.style.display = "block";
-  questionText.textContent = questions[index].q;
-  userInput.value = "";
-  selectedPiece.index = index;
-}
-
-checkBtn.addEventListener("click", () => {
-  if (!selectedPiece) return;
-  const index = selectedPiece.index;
-  const correct = questions[index].a.trim().toLowerCase();
-  const userAns = userInput.value.trim().toLowerCase();
-  if (userAns === correct) {
-    selectedPiece.classList.add("hidden");
-  } else {
-    selectedPiece.classList.add("failed");
-  }
-  questionBox.style.display = "none";
-  selectedPiece = null;
-});
-
-cancelBtn.addEventListener("click", () => {
-  questionBox.style.display = "none";
-  selectedPiece = null;
-});
-</script>
-
-</body>
-</html>
+  { q: "Pianeta più vicino al Sole?", a: "Mercu
 
