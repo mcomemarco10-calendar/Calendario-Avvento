@@ -27,15 +27,11 @@
     position:absolute;
     cursor:pointer;
     border:1px solid white;
-    transition: 0.3s;
-  }
-
-  .piece:hover {
-    transform: scale(1.05);
+    transition: 0.2s;
   }
 
   .piece.failed {
-    background-color: rgba(40,40,40,0.9); /* grigio scuro, immagine non visibile */
+    background-color: rgba(40,40,40,0.95); /* grigio scuro opaco */
     pointer-events: none; /* non si può più cliccare */
   }
 
@@ -101,35 +97,17 @@ const questions = [
   { q: "Autore di Pinocchio?", a: "Collodi" }
 ];
 
-// --- Puzzle piece shapes simulating interlocking pieces ---
-const shapes = [
-  "polygon(0% 0%, 100% 10%, 90% 100%, 10% 90%)",
-  "polygon(0% 0%, 100% 0%, 100% 100%, 0% 95%)",
-  "polygon(0% 5%, 95% 0%, 100% 95%, 5% 100%)",
-  "polygon(5% 0%, 100% 5%, 95% 100%, 0% 95%)",
-  "polygon(0% 0%, 100% 5%, 90% 100%, 10% 95%)",
-  "polygon(5% 0%, 95% 5%, 100% 100%, 0% 95%)",
-  "polygon(0% 0%, 100% 0%, 95% 95%, 5% 100%)",
-  "polygon(0% 5%, 100% 0%, 100% 95%, 0% 100%)",
-  "polygon(0% 0%, 100% 10%, 90% 100%, 10% 90%)",
-  "polygon(0% 0%, 100% 0%, 100% 95%, 0% 100%)",
-  "polygon(5% 0%, 95% 5%, 100% 100%, 0% 95%)",
-  "polygon(0% 5%, 100% 0%, 95% 100%, 0% 95%)",
-  "polygon(0% 0%, 100% 5%, 90% 100%, 10% 95%)",
-  "polygon(0% 0%, 100% 0%, 100% 100%, 0% 95%)",
-  "polygon(5% 0%, 95% 0%, 100% 95%, 0% 100%)",
-  "polygon(0% 5%, 100% 0%, 100% 95%, 0% 100%)"
-];
-
-// --- Generate random opaque colors ---
-function randomColor() {
-  const r = Math.floor(Math.random()*256);
-  const g = Math.floor(Math.random()*256);
-  const b = Math.floor(Math.random()*256);
-  return `rgba(${r},${g},${b},0.9)`; // opaco
+// --- Generate dark opaque colors ---
+function darkColor() {
+  const min = 20; // evitare colori troppo chiari
+  const max = 70;
+  const r = Math.floor(Math.random()*(max-min)+min);
+  const g = Math.floor(Math.random()*(max-min)+min);
+  const b = Math.floor(Math.random()*(max-min)+min);
+  return `rgba(${r},${g},${b},0.95)`; // molto scuro, opaco
 }
 
-// --- Create 4x4 puzzle pieces ---
+// --- Create 4x4 square pieces ---
 for (let r=0; r<4; r++) {
   for (let c=0; c<4; c++) {
     const i = r*4 + c;
@@ -139,8 +117,7 @@ for (let r=0; r<4; r++) {
     piece.style.left = c*25 + "%";
     piece.style.width = "25%";
     piece.style.height = "25%";
-    piece.style.clipPath = shapes[i]; // forma a incastro simulata
-    piece.style.backgroundColor = randomColor();
+    piece.style.backgroundColor = darkColor();
     piece.addEventListener("click", () => openQuestion(piece, i));
     puzzleContainer.appendChild(piece);
   }
@@ -164,7 +141,8 @@ checkBtn.addEventListener("click", () => {
   if (userAns === correct) {
     selectedPiece.classList.add("hidden"); // pezzo corretto scompare
   } else {
-    selectedPiece.classList.add("failed"); // pezzo sbagliato grigio scuro, non cliccabile
+    // cambia colore in real-time in grigio scuro opaco
+    selectedPiece.classList.add("failed");
   }
   questionBox.style.display = "none";
   selectedPiece = null;
