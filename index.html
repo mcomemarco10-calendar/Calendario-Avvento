@@ -96,5 +96,85 @@ const questions = [
   { q: "Monte più alto d’Italia?", a: "Monte Bianco" },
   { q: "Inventore del telefono?", a: "Bell" },
   { q: "Simbolo chimico oro?", a: "Au" },
-  { q: "Pianeta più vicino al Sole?", a: "Mercu
+  { q: "Pianeta più vicino al Sole?", a: "Mercurio" },
+  { q: "Lingua più parlata nel mondo?", a: "Inglese" },
+  { q: "Anno della scoperta dell’America?", a: "1492" },
+  { q: "Autore di Pinocchio?", a: "Collodi" }
+];
 
+// --- Forme irregolari per i pezzi ---
+const shapes = [
+  "polygon(0% 0%,100% 10%,90% 100%,10% 90%)",
+  "polygon(0% 0%,100% 0%,95% 100%,5% 95%)",
+  "polygon(0% 5%,100% 0%,100% 95%,0% 100%)",
+  "polygon(0% 0%,100% 5%,90% 100%,0% 95%)",
+  "polygon(5% 0%,100% 0%,95% 95%,0% 100%)",
+  "polygon(0% 0%,100% 0%,100% 100%,5% 90%)",
+  "polygon(0% 5%,100% 0%,100% 95%,0% 100%)",
+  "polygon(0% 0%,95% 0%,100% 100%,5% 95%)",
+  "polygon(0% 0%,100% 10%,95% 100%,5% 90%)",
+  "polygon(0% 5%,100% 0%,90% 100%,0% 95%)",
+  "polygon(0% 0%,100% 0%,100% 95%,0% 100%)",
+  "polygon(5% 0%,100% 0%,95% 100%,0% 95%)",
+  "polygon(0% 0%,100% 0%,100% 100%,10% 90%)",
+  "polygon(0% 0%,95% 5%,100% 95%,5% 90%)",
+  "polygon(0% 5%,100% 0%,95% 100%,0% 95%)",
+  "polygon(0% 0%,100% 5%,100% 100%,5% 95%)"
+];
+
+// --- Funzione per generare colori random opachi ---
+function randomColor() {
+  const r = Math.floor(Math.random()*256);
+  const g = Math.floor(Math.random()*256);
+  const b = Math.floor(Math.random()*256);
+  return `rgba(${r},${g},${b},0.9)`; // opaco, immagine sotto non si vede
+}
+
+// --- Crea i pezzi 4x4 ---
+for (let r=0; r<4; r++) {
+  for (let c=0; c<4; c++) {
+    const i = r*4 + c;
+    const piece = document.createElement("div");
+    piece.classList.add("piece");
+    piece.style.top = r*25 + "%";
+    piece.style.left = c*25 + "%";
+    piece.style.width = "25%";
+    piece.style.height = "25%";
+    piece.style.clipPath = shapes[i]; // forma irregolare
+    piece.style.backgroundColor = randomColor(); // colore random opaco
+    piece.addEventListener("click", () => openQuestion(piece, i));
+    puzzleContainer.appendChild(piece);
+  }
+}
+
+// --- Popup domanda ---
+function openQuestion(piece, index) {
+  selectedPiece = piece;
+  questionBox.style.display = "block";
+  questionText.textContent = questions[index].q;
+  userInput.value = "";
+  selectedPiece.index = index;
+}
+
+checkBtn.addEventListener("click", () => {
+  if (!selectedPiece) return;
+  const index = selectedPiece.index;
+  const correct = questions[index].a.trim().toLowerCase();
+  const userAns = userInput.value.trim().toLowerCase();
+  if (userAns === correct) {
+    selectedPiece.classList.add("hidden"); // pezzo corretto scompare
+  } else {
+    selectedPiece.classList.add("failed"); // pezzo sbagliato diventa grigio scuro
+  }
+  questionBox.style.display = "none";
+  selectedPiece = null;
+});
+
+cancelBtn.addEventListener("click", () => {
+  questionBox.style.display = "none";
+  selectedPiece = null;
+});
+</script>
+
+</body>
+</html>
