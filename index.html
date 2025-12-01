@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -183,11 +184,13 @@
     questionBox.style.display = "none";
   });
 
-  // ROTAZIONE RANDOM IMAGE UNA SOLA VOLTA
+  // ROTAZIONE RANDOM A MULTIPLI DI 90°
   const img = document.getElementById("puzzle-img");
-  img.style.transform = `rotate(${Math.floor(Math.random()*360)}deg)`;
+  const angles = [0, 90, 180, 270];
+  img.style.transform = `rotate(${angles[Math.floor(Math.random()*angles.length)]}deg)`;
 
 </script>
 
 </body>
 </html>
+
