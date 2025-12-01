@@ -18,6 +18,7 @@
     width:400px;
     height:400px;
     border:2px solid #ccc;
+    background-image: url('https://media-assets.vanityfair.it/photos/672f782d22f064101b9b5d29/16:9/w_1024,h_576,c_limit/50%20anni%20di%20Leonardo%20DiCaprio_curiosit%C3%A0-Academy%20of%20Motion%20Picture%20Arts%202024.jpg');
     background-size: cover;
     background-position: center;
   }
@@ -34,12 +35,13 @@
   }
 
   .piece.failed {
-    background-color: rgba(40,40,40,0.9); /* pezzo sbagliato, grigio scuro */
+    background-color: rgba(40,40,40,0.9); /* grigio scuro, immagine non visibile */
+    pointer-events: none; /* non si può più cliccare */
   }
 
   .piece.hidden {
     opacity: 0;
-    pointer-events: none;
+    pointer-events: none; /* scompare pezzo corretto */
   }
 
   #question-box {
@@ -79,10 +81,7 @@ const cancelBtn = document.getElementById("cancel-btn");
 
 let selectedPiece = null;
 
-// --- Image and questions (creator only) ---
-const imageUrl = "https://i.imgur.com/yourimage.jpg"; // inserisci qui l'immagine del puzzle
-puzzleContainer.style.backgroundImage = `url('${imageUrl}')`;
-
+// --- Questions ---
 const questions = [
   { q: "Qual è la capitale d’Italia?", a: "Roma" },
   { q: "Quanto fa 7×8?", a: "56" },
@@ -102,35 +101,35 @@ const questions = [
   { q: "Autore di Pinocchio?", a: "Collodi" }
 ];
 
-// --- Forme irregolari per i pezzi ---
+// --- Puzzle piece shapes simulating interlocking pieces ---
 const shapes = [
-  "polygon(0% 0%,100% 10%,90% 100%,10% 90%)",
-  "polygon(0% 0%,100% 0%,95% 100%,5% 95%)",
-  "polygon(0% 5%,100% 0%,100% 95%,0% 100%)",
-  "polygon(0% 0%,100% 5%,90% 100%,0% 95%)",
-  "polygon(5% 0%,100% 0%,95% 95%,0% 100%)",
-  "polygon(0% 0%,100% 0%,100% 100%,5% 90%)",
-  "polygon(0% 5%,100% 0%,100% 95%,0% 100%)",
-  "polygon(0% 0%,95% 0%,100% 100%,5% 95%)",
-  "polygon(0% 0%,100% 10%,95% 100%,5% 90%)",
-  "polygon(0% 5%,100% 0%,90% 100%,0% 95%)",
-  "polygon(0% 0%,100% 0%,100% 95%,0% 100%)",
-  "polygon(5% 0%,100% 0%,95% 100%,0% 95%)",
-  "polygon(0% 0%,100% 0%,100% 100%,10% 90%)",
-  "polygon(0% 0%,95% 5%,100% 95%,5% 90%)",
-  "polygon(0% 5%,100% 0%,95% 100%,0% 95%)",
-  "polygon(0% 0%,100% 5%,100% 100%,5% 95%)"
+  "polygon(0% 0%, 100% 10%, 90% 100%, 10% 90%)",
+  "polygon(0% 0%, 100% 0%, 100% 100%, 0% 95%)",
+  "polygon(0% 5%, 95% 0%, 100% 95%, 5% 100%)",
+  "polygon(5% 0%, 100% 5%, 95% 100%, 0% 95%)",
+  "polygon(0% 0%, 100% 5%, 90% 100%, 10% 95%)",
+  "polygon(5% 0%, 95% 5%, 100% 100%, 0% 95%)",
+  "polygon(0% 0%, 100% 0%, 95% 95%, 5% 100%)",
+  "polygon(0% 5%, 100% 0%, 100% 95%, 0% 100%)",
+  "polygon(0% 0%, 100% 10%, 90% 100%, 10% 90%)",
+  "polygon(0% 0%, 100% 0%, 100% 95%, 0% 100%)",
+  "polygon(5% 0%, 95% 5%, 100% 100%, 0% 95%)",
+  "polygon(0% 5%, 100% 0%, 95% 100%, 0% 95%)",
+  "polygon(0% 0%, 100% 5%, 90% 100%, 10% 95%)",
+  "polygon(0% 0%, 100% 0%, 100% 100%, 0% 95%)",
+  "polygon(5% 0%, 95% 0%, 100% 95%, 0% 100%)",
+  "polygon(0% 5%, 100% 0%, 100% 95%, 0% 100%)"
 ];
 
-// --- Funzione per generare colori random opachi ---
+// --- Generate random opaque colors ---
 function randomColor() {
   const r = Math.floor(Math.random()*256);
   const g = Math.floor(Math.random()*256);
   const b = Math.floor(Math.random()*256);
-  return `rgba(${r},${g},${b},0.9)`; // opaco, immagine sotto non si vede
+  return `rgba(${r},${g},${b},0.9)`; // opaco
 }
 
-// --- Crea i pezzi 4x4 ---
+// --- Create 4x4 puzzle pieces ---
 for (let r=0; r<4; r++) {
   for (let c=0; c<4; c++) {
     const i = r*4 + c;
@@ -140,15 +139,16 @@ for (let r=0; r<4; r++) {
     piece.style.left = c*25 + "%";
     piece.style.width = "25%";
     piece.style.height = "25%";
-    piece.style.clipPath = shapes[i]; // forma irregolare
-    piece.style.backgroundColor = randomColor(); // colore random opaco
+    piece.style.clipPath = shapes[i]; // forma a incastro simulata
+    piece.style.backgroundColor = randomColor();
     piece.addEventListener("click", () => openQuestion(piece, i));
     puzzleContainer.appendChild(piece);
   }
 }
 
-// --- Popup domanda ---
+// --- Show question popup ---
 function openQuestion(piece, index) {
+  if (piece.classList.contains("failed") || piece.classList.contains("hidden")) return;
   selectedPiece = piece;
   questionBox.style.display = "block";
   questionText.textContent = questions[index].q;
@@ -164,7 +164,7 @@ checkBtn.addEventListener("click", () => {
   if (userAns === correct) {
     selectedPiece.classList.add("hidden"); // pezzo corretto scompare
   } else {
-    selectedPiece.classList.add("failed"); // pezzo sbagliato diventa grigio scuro
+    selectedPiece.classList.add("failed"); // pezzo sbagliato grigio scuro, non cliccabile
   }
   questionBox.style.display = "none";
   selectedPiece = null;
