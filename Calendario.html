@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puzzle Quiz</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/framer-motion/dist/framer-motion.umd.js"></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<style>
+/* Add your Tailwind or custom CSS here */
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+
+const { useState } = React;
+const { motion } = window["framer-motion"];
+
+const questions = [
+  { q: "Qual è la capitale d’Italia?", a: "Roma" },
+  { q: "Quanto fa 7×8?", a: "56" },
+  { q: "Chi ha scritto la Divina Commedia?", a: "Dante" },
+  { q: "Anno di nascita di Leonardo da Vinci?", a: "1452" },
+];
+
+function PuzzleGame() {
+  const [image, setImage] = useState(null);
+  const [revealed, setRevealed] = useState(Array(16).fill(false));
+  const [failed, setFailed] = useState(Array(16).fill(false));
+  const [currentIndex, setCurrentIndex] = useState(null);
+  const [answer, setAnswer] = useState("");
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) setImage(URL.createObjectURL(file));
+  };
+
+  const checkAnswer = () => {
+    if (!questions[currentIndex]) return;
+    const correct = answer.trim().toLowerCase() === questions[currentIndex].a.toLowerCase();
+    if (correct) {
+      const newRev = [...revealed];
+      newRev[currentIndex] = true;
+      setRevealed(newRev);
+    } else {
+      const newFail = [...failed];
+      newFail[currentIndex] = true;
+      setFailed(newFail);
+    }
+    setAnswer("");
+    setCurrentIndex(null);
+  };
+
+  return (
+    <div className="flex flex-col items-center p-4 space-y-4">
+      {!image && <input type="file" accept="image/*" onChange={handleImageUpload} />}
+      {image && (
+        <div className="relative w-[400px] h-[400px] border-2 border-gray-300">
+          <img src={image} alt="Puzzle" className="absolute top-0 left-0 w-full h-full object-cover" />
+          <div className="absolute top-0 left-0 w-full h-full grid grid-cols-4 grid-rows-4">
+            {Array.from({ length: 16 }).map((_, i) => (
+              <motion.div
+                key={i}
+                className={`border border-white cursor-pointer ${
+                  revealed[i] ? "opacity-0 pointer-events-none" :
+                  failed[i] ? "bg-gray-500 opacity-80" : "bg-blue-600 opacity-80"
+                }`}
+                whileHover={{ scale: 1.05 }}
+                onClick={() => setCurrentIndex(i)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+      {currentIndex !== null && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-2xl shadow-lg space-y-4">
+            <p className="text-lg font-semibold">{questions[currentIndex]?.q}</p>
+            <input
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              placeholder="Risposta..."
+            />
+            <div>
+              <button onClick={() => setCurrentIndex(null)}>Annulla</button>
+              <button onClick={checkAnswer}>Conferma</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<PuzzleGame />);
+
+</script>
+</body>
+</html>
