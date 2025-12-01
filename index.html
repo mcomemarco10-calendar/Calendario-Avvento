@@ -31,13 +31,13 @@
   }
 
   .piece.failed {
-    background-color: rgba(40,40,40,0.95); /* grigio scuro opaco */
-    pointer-events: none; /* non si può più cliccare */
+    background-color: rgb(30,30,30); /* GRIGIO SCURO NON TRASPARENTE */
+    pointer-events: none;
   }
 
   .piece.hidden {
     opacity: 0;
-    pointer-events: none; /* scompare pezzo corretto */
+    pointer-events: none;
   }
 
   #question-box {
@@ -77,7 +77,6 @@ const cancelBtn = document.getElementById("cancel-btn");
 
 let selectedPiece = null;
 
-// --- Questions ---
 const questions = [
   { q: "Qual è la capitale d’Italia?", a: "Roma" },
   { q: "Quanto fa 7×8?", a: "56" },
@@ -97,17 +96,14 @@ const questions = [
   { q: "Autore di Pinocchio?", a: "Collodi" }
 ];
 
-// --- Generate dark opaque colors ---
+// --- COLORI SCURI TOTALMENTE OPACHI ---
 function darkColor() {
-  const min = 20; // evitare colori troppo chiari
-  const max = 70;
-  const r = Math.floor(Math.random()*(max-min)+min);
-  const g = Math.floor(Math.random()*(max-min)+min);
-  const b = Math.floor(Math.random()*(max-min)+min);
-  return `rgba(${r},${g},${b},0.95)`; // molto scuro, opaco
+  const r = Math.floor(Math.random() * 40);
+  const g = Math.floor(Math.random() * 40);
+  const b = Math.floor(Math.random() * 40);
+  return `rgb(${r},${g},${b})`;
 }
 
-// --- Create 4x4 square pieces ---
 for (let r=0; r<4; r++) {
   for (let c=0; c<4; c++) {
     const i = r*4 + c;
@@ -123,7 +119,6 @@ for (let r=0; r<4; r++) {
   }
 }
 
-// --- Show question popup ---
 function openQuestion(piece, index) {
   if (piece.classList.contains("failed") || piece.classList.contains("hidden")) return;
   selectedPiece = piece;
@@ -134,16 +129,16 @@ function openQuestion(piece, index) {
 }
 
 checkBtn.addEventListener("click", () => {
-  if (!selectedPiece) return;
   const index = selectedPiece.index;
   const correct = questions[index].a.trim().toLowerCase();
   const userAns = userInput.value.trim().toLowerCase();
+
   if (userAns === correct) {
-    selectedPiece.classList.add("hidden"); // pezzo corretto scompare
+    selectedPiece.classList.add("hidden");
   } else {
-    // cambia colore in real-time in grigio scuro opaco
     selectedPiece.classList.add("failed");
   }
+
   questionBox.style.display = "none";
   selectedPiece = null;
 });
