@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<title>Puzzle Quiz 5x5</title>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #222;
+    color: white;
+    font-family: Arial, sans-serif;
+  }
+
+  #puzzle-container {
+    position:relative;
+    width:500px;
+    height:500px;
+    border:3px solid #fff;
+    background-image: url('https://media-assets.vanityfair.it/photos/672f782d22f064101b9b5d29/16:9/w_1024,h_576,c_limit/50%20anni%20di%20Leonardo%20DiCaprio_curiosit%C3%A0-Academy%20of%20Motion%20Picture%20Arts%202024.jpg');
+    background-size: cover;
+    background-position: center;
+    transition: transform .3s ease;
+  }
+
+  .piece {
+    position: absolute;
+    cursor: pointer;
+  }
+
+  .disabled {
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div id="puzzle-container"></div>
+
+<script>
+const container = document.getElementById("puzzle-container");
+
+// ---- ROTAZIONE CASUALE (multipli di 90°) ----
+const rotations = [0, 90, 180, 270];
+const randomRotation = rotations[Math.floor(Math.random() * rotations.length)];
+container.style.transform = `rotate(${randomRotation}deg)`;
+
+// ---- SETTINGS ----
+const rows = 5;
+const cols = 5;
+const totalPieces = rows * cols;
+let questionIndex = 0;
+let answeredPieces = 0;
+
+// ---- DOMANDE ----
+const questions = [
+  "In che anno è nato Leonardo DiCaprio?",
+  "Con quale film ha vinto il suo primo Oscar?",
+  "Come si chiama il suo personaggio in Titanic?",
+  "Qual è il suo segno zodiacale?",
+  "In quale città è nato?",
+  "È vegano? (si/no)",
+  "Ha mai recitato in un film diretto da Quentin Tarantino? (si/no)",
+  "Ha recitato in Inception? (si/no)",
+  "È apparso in più di 30 film? (si/no)",
+  "È nato nel mese di novembre? (si/no)",
+  "Ha mai interpretato un serial killer? (si/no)",
+  "Ha fatto parte del cast di Shutter Island? (si/no)",
+  "Ha lavorato con Martin Scorsese? (si/no)",
+  "È stato protagonista in The Revenant? (si/no)",
+  "Ha recitato in Django Unchained? (si/no)",
+  "Ha vinto più di un Oscar? (si/no)",
+  "È stato nominato per più di 5 Oscar? (si/no)",
+  "Ha recitato in The Wolf of Wall Street? (si/no)",
+  "Il suo secondo nome è Wilhelm? (si/no)",
+  "Ha doppiato un personaggio in un film d'animazione? (si/no)",
+  "È apparso in film degli anni '90? (si/no)",
+  "Ha recitato in un film romantico? (si/no)",
+  "Ha vinto premi BAFTA? (si/no)",
+  "Ha interpretato un ruolo in un film ambientato nello spazio? (si/no)",
+  "Ha mai fatto produzioni Netflix? (si/no)"
+];
+
+// ---- CREAZIONE PEZZI ----
+for (let r = 0; r < rows; r++) {
+  for (let c = 0; c < cols; c++) {
+
+    const piece = document.createElement("div");
+    piece.classList.add("piece");
+
+    const size = container.offsetWidth / rows;
+    piece.style.width = `${size}px`;
+    piece.style.height = `${size}px`;
+    piece.style.left = `${c * size}px`;
+    piece.style.top = `${r * size}px`;
+
+    // colore casuale opaco (no trasparenza)
+    piece.style.backgroundColor = `hsl(${Math.random()*360}, 50%, 20%)`;
+
+    piece.addEventListener("click", () => handleAnswer(piece));
+
+    container.appendChild(piece);
+  }
+}
+
+// ---- LOGICA RISPOSTA ----
+function handleAnswer(piece) {
+  const answer = prompt(questions[questionIndex] || "Domanda").trim().toLowerCase();
+  const correct = checkAnswer(questionIndex, answer);
+
+  if (correct) {
+    piece.remove();
+  } else {
+    piece.style.backgroundColor = "rgb(50,50,50)";
+    piece.classList.add("disabled");
+  }
+
+  questionIndex++;
+  answeredPieces++;
+
+  if (answeredPieces >= totalPieces) {
+    alert("Puzzle completato!");
+  }
+}
+
+// ---- RISPOSTE CORRETTE ----
+function checkAnswer(index, answer) {
+  const accepted = [
+    "1974",
+    "the revenant",
+    "jack",
+    "scorpione",
+    "los angeles",
+    "si",
+    "si",
+    "si",
+    "si",
+    "si",
+    "si",
+    "si",
+    "si",
+    "si",
+    "si",
+    "no",
+    "si",
+    "si",
+    "si",
+    "si",
+    "si",
+    "si",
+    "si",
+    "no",
+    "si"
+  ];
+
+  return answer.includes(accepted[index]);
+}
+</script>
+
+</body>
+</html>
