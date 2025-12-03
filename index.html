@@ -33,6 +33,7 @@ body {
     background-color: #001122;
     background-size: 400px 400px;
     background-repeat: no-repeat;
+    transition: transform 0.3s;
 }
 
 .revealed {
@@ -103,8 +104,10 @@ const answers = [
     "Devon",
     "Sì"
 ];
+
 const container = document.getElementById("puzzle-container");
 let selectedIndex = null;
+const attempted = {}; // tiene traccia delle domande già tentate
 
 // CREA 16 PEZZI
 for (let i = 0; i < 16; i++) {
@@ -130,6 +133,7 @@ const qText = document.getElementById("question-text");
 const answerField = document.getElementById("answer-input");
 
 function openQuestion(i, piece) {
+    if (attempted[i]) return; // blocca tentativi se già sbagliata
     selectedIndex = i;
     qText.textContent = questions[i];
     answerField.value = "";
@@ -147,8 +151,14 @@ document.getElementById("confirm-btn").addEventListener("click", () => {
         piece.classList.add("revealed");
         piece.style.backgroundPosition = piece.dataset.position;
         piece.style.backgroundColor = "transparent";
+
+        // Ruota randomicamente di 90, 180 o 270 gradi
+        const rotations = [90, 180, 270];
+        const randomRotation = rotations[Math.floor(Math.random() * rotations.length)];
+        piece.style.transform = `rotate(${randomRotation}deg)`;
     } else {
         piece.style.opacity = "0.4";
+        attempted[selectedIndex] = true; // segna come tentata e sbagliata
     }
 
     box.style.display = "none";
