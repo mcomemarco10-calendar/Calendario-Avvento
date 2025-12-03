@@ -2,66 +2,55 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Puzzle Quiz</title>
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f5f5f5;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 0;
-        padding: 20px;
-        user-select: none;
-    }
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 20px;
+}
 
-    h1 { margin-bottom: 10px; }
+#puzzle-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    border: 2px solid #ccc;
+}
 
-    #puzzle-container {
-        position: relative;
-        width: 400px;
-        height: 400px;
-        border: 2px solid #ccc;
-        overflow: hidden;
-        background: black;
-    }
+.piece {
+    position: absolute;
+    width: 25%;
+    height: 25%;
+    cursor: pointer;
+    border: 1px solid #fff;
+    background-color: #001122;
+    background-size: 400px 400px;
+    background-repeat: no-repeat;
+}
 
-    .piece {
-        position: absolute;
-        width: 25%;
-        height: 25%;
-        cursor: pointer;
-        border: 1px solid white;
-        background-color: #001122;  /* colore iniziale */
-        background-size: 400px 400px;
-        background-repeat: no-repeat;
-        transition: opacity 0.3s;
-    }
+.revealed {
+    background-image: url("https://github.com/mcomemarco10-calendar/Calendario-Avvento/blob/main/Volto.jpg");
+}
 
-    .correct {
-        background-color: transparent !important;
-    }
-
-    .wrong {
-        background-color: #2c2c2c !important;
-    }
-
-    #question-box {
-        margin-top: 15px;
-        padding: 15px;
-        background: white;
-        border-radius: 10px;
-        display: none;
-        width: 300px;
-        text-align: center;
-        box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    }
+#question-box {
+    margin-top: 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    display: none;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
 </style>
 </head>
-
 <body>
 
 <h1>🧩 Puzzle Quiz</h1>
@@ -70,94 +59,90 @@
 
 <div id="question-box">
     <p id="question-text"></p>
-    <input id="answer-input" type="text" placeholder="Scrivi la risposta..." />
-    <br>
+    <input id="answer-input" type="text" placeholder="Scrivi la risposta…">
+    <br><br>
     <button id="confirm-btn">Conferma</button>
     <button id="cancel-btn">Annulla</button>
 </div>
 
 <script>
 const questions = [
-    "La costruzione del Tower Bridge è iniziata prima o dopo del 1880?",
-    "Chi è il sovrano del Regno Unito più anziano di sempre al momento dell'insediamento?",
-    "Compreso il Regno Unito, quanti sono attualmente i Reami del Commonwealth",
-    "Chi, oltre Sherlock Holmes, abita in un famoso 221B?",
-    "Quanti anni sono passati (in UK) dalla prima all'ultima stagione di Sherlock?",
-    "Il Big Ben è alto più o meno di 100 metri? ",
-    "Con quale nome è conosciuto il grattacielo di Londra '30 St Mary Axe'?",
-    "Come era soprannominata (in inglese) Margaret Thatcher?",
-    "Con quale nome è conosciuto il grattacielo di Londra '20 Fenchurch Street'",
-    "Quale Premio Nobel ha vinto Churchill? (Mettere solo la categoria)",
-    "Quale animale è la mascotte della Torre di Londra?",
-    "Che parte della carne viene fatto alla 'Wellington'?",
-    "Quale è il grattacielo più alto di Londra?",
-    "Quante stagioni sono di The Crown?",
-    "Che titolo ha l'erede al trono Britannico?",
-    "Quanti figli ha William?"
+    "Domanda 1?",
+    "Domanda 2?",
+    "Domanda 3?",
+    "Domanda 4?",
+    "Domanda 5?",
+    "Domanda 6?",
+    "Domanda 7?",
+    "Domanda 8?",
+    "Domanda 9?",
+    "Domanda 10?",
+    "Domanda 11?",
+    "Domanda 12?",
+    "Domanda 13?",
+    "Domanda 14?",
+    "Domanda 15?",
+    "Domanda 16?"
 ];
 
 const answers = [
-    "dopo","re carlo iii","15","dr. house","7","meno",
-    "il cetriolino","the iron lady","the walkie talkie","letteratura",
-    "corvo","filetto","the shard","6","principe di galles","3"
+    "a1","a2","a3","a4","a5","a6","a7","a8",
+    "a9","a10","a11","a12","a13","a14","a15","a16"
 ];
 
-const puzzle = document.getElementById("puzzle-container");
-const questionBox = document.getElementById("question-box");
-const questionText = document.getElementById("question-text");
-const answerInput = document.getElementById("answer-input");
+const container = document.getElementById("puzzle-container");
+let selectedIndex = null;
 
-let selectedPieceIndex = null;
-
-const IMG = "Volto.jpg";
-const SIZE = 400;
-const PIECES = 4;
-
+// CREA 16 PEZZI
 for (let i = 0; i < 16; i++) {
+    const piece = document.createElement("div");
+    piece.classList.add("piece");
 
     const row = Math.floor(i / 4);
     const col = i % 4;
 
-    const piece = document.createElement("div");
-    piece.className = "piece";
+    piece.dataset.index = i;
+    piece.dataset.position = `-${col * 100}px -${row * 100}px`;
 
-    // posizione nel puzzle
     piece.style.top = (row * 25) + "%";
     piece.style.left = (col * 25) + "%";
 
-    // coordinate del ritaglio
-    const bgX = -(col * SIZE / PIECES);
-    const bgY = -(row * SIZE / PIECES);
-
-    piece.style.backgroundImage = `url('${IMG}')`;
-    piece.style.backgroundPosition = `${bgX}px ${bgY}px`;
-
-    piece.addEventListener("click", () => {
-        selectedPieceIndex = i;
-        questionText.textContent = questions[i];
-        answerInput.value = "";
-        questionBox.style.display = "block";
-    });
-
-    puzzle.appendChild(piece);
+    piece.addEventListener("click", () => openQuestion(i, piece));
+    container.appendChild(piece);
 }
 
+// Apri domanda
+const box = document.getElementById("question-box");
+const qText = document.getElementById("question-text");
+const answerField = document.getElementById("answer-input");
+
+function openQuestion(i, piece) {
+    selectedIndex = i;
+    qText.textContent = questions[i];
+    answerField.value = "";
+    box.style.display = "block";
+}
+
+// Convalida risposta
 document.getElementById("confirm-btn").addEventListener("click", () => {
-    const user = answerInput.value.trim().toLowerCase();
-    const correct = answers[selectedPieceIndex].toLowerCase();
-    const piece = puzzle.children[selectedPieceIndex];
+    const user = answerField.value.trim().toLowerCase();
+    const correct = answers[selectedIndex].toLowerCase();
+
+    const piece = document.querySelector(`.piece[data-index="${selectedIndex}"]`);
 
     if (user === correct) {
-        piece.classList.add("correct");  // rivela l’immagine
+        piece.classList.add("revealed");
+        piece.style.backgroundPosition = piece.dataset.position;
+        piece.style.backgroundColor = "transparent";
     } else {
-        piece.classList.add("wrong");
+        piece.style.opacity = "0.4";
     }
 
-    questionBox.style.display = "none";
+    box.style.display = "none";
 });
 
 document.getElementById("cancel-btn").addEventListener("click", () => {
-    questionBox.style.display = "none";
+    box.style.display = "none";
 });
 </script>
 
