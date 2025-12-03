@@ -27,24 +27,14 @@
     border: 2px solid #ccc;
   }
 
-  #puzzle-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform-origin: center;
-    transition: transform 0.4s;
-  }
-
   .piece {
     position: absolute;
     width: 25%;
     height: 25%;
     cursor: pointer;
     border: 1px solid white;
-  }
-
-  .disabled {
-    pointer-events: none;
+    background-size: 400% 400%;
+    background-repeat: no-repeat;
   }
 
   .correct {
@@ -84,11 +74,10 @@
 
 <body>
 
-<h1>🧩 Calendario dell'Avvento in Quiz</h1>
+<h1>🧩 Puzzle Quiz</h1>
 
-<div id="puzzle-container">
-  <img id="puzzle-img" src="Volto.jpg" alt="Puzzle Image">
-</div>
+<!-- 🔒 No full image is shown -->
+<div id="puzzle-container"></div>
 
 <div id="question-box">
   <p id="question-text"></p>
@@ -99,67 +88,57 @@
 </div>
 
 <script>
+  // Questions and answers remain visible in source (normal)
   const questions = [
-    "In quanti film di 007 ha recitato Daniel Craig? (Rispondere con il solo numero)",
-    "Compreso l'ultimo film in uscita, in quanti film della serie Knives Out ha recitato Daniel Craig? (Rispondere con il solo numero)",
-    "Daniel Craig è nato prima o dopo il 1965? (Rispondere solo con Prima o Dopo)",
-    "Con quale attrice è sposato attualmente Daniel Craig? (Rispondere con Nome e Cognome)",
-    "Entrambi i genitori di Daniel Craig hanno origini da quale stato membro del Regno Unito? (Rispondere solo con il nome dello Stato)",
-    "Daniel Craig ha recitato in più o meno di 100 film (compreso l'ultimo in uscita)? (Rispondere con Più o Meno)",
-    "Daniel Craig ha recitato in un film riguardante l'ascesa al trono di quale Regina di Inghilterra? (Rispondere solo con Nome e Numero (romano))",
-    "Quale attore interpreta il nemico di 007 nel primo film di 007 con Daniel Craig (Casino Royale)?",
-    "Daniel Craig ha mai recitato in un film insieme a sua moglie? (Rispondere solo con Sì o No)",
-    "In quale film della saga di Star Wars ha fatto un cameo Daniel Craig? (Rispondere con il numero romano dell'Episodio)",
-    "Chi interpreta Lara Croft nel film con Daniel Craig? (Rispondere con Nome e Cognome)",
-    "Quante volte Daniel Craig è stato nominato ai Golden Globe? (Rispondere solo con il numero)",
-    "Quali Olimpiadi ha aperto Daniel Craig con un famosissimo video? (Scrivere la città dove si sono svolte le Olimpiadi)",
-    "Quale città dà il titolo a un film con Daniel Craig e diretto da Steven Spielberg? (Scrivere il titolo del film, che è il nome della città nella sua lingua d'origine)",
-    "Quante volte Daniel Craig è stato nominato agli Oscar? (Rispondere solo con il numero)",
-    "Daniel Craig ha più o meno di tre figli/e? (Rispondere solo con Più o Meno)"
+    "La costruzione del Tower Bridge é iniziata prima o dopo del 1880?",
+    "Chi è il sovrano del Regno Unito più anziano di sempre al momento dell'insediamento?",
+    "Compreso il Regno Unito, quanti sono attualmente i Reami del Commonwealth",
+    "Chi, oltre Sherlock Holmes, abita in un famoso 221B?",
+    "Quanti anni sono passati (in UK) dalla prima all'ultima stagione di Sherlock?",
+    "Il Big Ben è alto più o meno di 100 metri?",
+    "Con quale nome è conosciuto il grattacielo di Londra '30 St Mary Axe'?",
+    "Come era soprannominata (in inglese) Margaret Thatcher?",
+    "Con quale nome è conosciuto il grattacielo di Londra '20 Fenchurch Street'",
+    "Quale Premio Nobel ha vinto Churchill? (Solo categoria)",
+    "Quale animale è la mascotte della Torre di Londra?",
+    "Che parte della carne viene fatto alla 'Wellington'?",
+    "Quale è il grattacielo più alto di Londra?",
+    "Quante stagioni sono di The Crown?",
+    "Che titolo ha l'erede al trono Britannico?",
+    "Quanti figli ha William?"
   ];
 
   const answers = [
-    "5",
-    "3",
-    "Dopo",
-    "Rachel Weisz",
-    "Galles",
-    "Meno",
-    "Elisabetta I",
-    "Mads Mikkelsen",
-    "Sì",
-    "VII",
-    "Angelina Jolie",
-    "3",
-    "Londra",
-    "Munich",
-    "0",
-    "Meno"
+    "Dopo","Re Carlo III","15","Dr. House","7","Meno",
+    "Il cetriolino","The iron lady","The walkie talkie",
+    "Letteratura","Corvo","Filetto","The shard","6",
+    "Principe di Galles","3"
   ];
 
   const puzzleContainer = document.getElementById("puzzle-container");
   const questionBox = document.getElementById("question-box");
   const questionText = document.getElementById("question-text");
   const answerInput = document.getElementById("answer-input");
-
   let selectedPieceIndex = null;
 
-  function randomColor(){
-    const colors = ["#002233", "#001122", "#112233", "#331144", "#222233", "#000033"];
-    return colors[Math.floor(Math.random()*colors.length)];
-  }
-
+  // Create puzzle pieces from one hidden image
   for (let i = 0; i < 16; i++){
     const piece = document.createElement("div");
     piece.classList.add("piece");
-    piece.style.backgroundColor = randomColor();
+
+    const x = (i % 4) * -25;
+    const y = Math.floor(i / 4) * -25;
+
+    piece.style.backgroundImage = "url('Volto.jpg')";
+    piece.style.backgroundPosition = `${x}% ${y}%`;
     piece.style.top = Math.floor(i / 4) * 25 + "%";
     piece.style.left = (i % 4) * 25 + "%";
-    piece.addEventListener("click", ()=> openQuestion(i, piece));
+
+    piece.addEventListener("click", ()=> openQuestion(i));
     puzzleContainer.appendChild(piece);
   }
 
-  function openQuestion(index, piece){
+  function openQuestion(index){
     selectedPieceIndex = index;
     questionText.textContent = questions[index];
     answerInput.value = "";
@@ -183,14 +162,9 @@
   document.getElementById("cancel-btn").addEventListener("click", ()=>{
     questionBox.style.display = "none";
   });
-
-  // ROTAZIONE RANDOM A MULTIPLI DI 90°
-  const img = document.getElementById("puzzle-img");
-  const angles = [0, 90, 180, 270];
-  img.style.transform = `rotate(${angles[Math.floor(Math.random()*angles.length)]}deg)`;
-
 </script>
 
 </body>
 </html>
+
 
