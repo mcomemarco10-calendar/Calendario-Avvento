@@ -55,33 +55,6 @@ let questionIndex = 0;
 let answeredPieces = 0;
 
 // ---- DOMANDE ----
-const questions = [
-  "In che anno è nato Leonardo DiCaprio?",
-  "Con quale film ha vinto il suo primo Oscar?",
-  "Come si chiama il suo personaggio in Titanic?",
-  "Qual è il suo segno zodiacale?",
-  "In quale città è nato?",
-  "È vegano? (si/no)",
-  "Ha mai recitato in un film diretto da Quentin Tarantino? (si/no)",
-  "Ha recitato in Inception? (si/no)",
-  "È apparso in più di 30 film? (si/no)",
-  "È nato nel mese di novembre? (si/no)",
-  "Ha mai interpretato un serial killer? (si/no)",
-  "Ha fatto parte del cast di Shutter Island? (si/no)",
-  "Ha lavorato con Martin Scorsese? (si/no)",
-  "È stato protagonista in The Revenant? (si/no)",
-  "Ha recitato in Django Unchained? (si/no)",
-  "Ha vinto più di un Oscar? (si/no)",
-  "È stato nominato per più di 5 Oscar? (si/no)",
-  "Ha recitato in The Wolf of Wall Street? (si/no)",
-  "Il suo secondo nome è Wilhelm? (si/no)",
-  "Ha doppiato un personaggio in un film d'animazione? (si/no)",
-  "È apparso in film degli anni '90? (si/no)",
-  "Ha recitato in un film romantico? (si/no)",
-  "Ha vinto premi BAFTA? (si/no)",
-  "Ha interpretato un ruolo in un film ambientato nello spazio? (si/no)",
-  "Ha mai fatto produzioni Netflix? (si/no)"
-];
 
 // ---- CREAZIONE PEZZI ----
 for (let r = 0; r < rows; r++) {
@@ -127,33 +100,43 @@ function handleAnswer(piece) {
 
 // ---- RISPOSTE CORRETTE ----
 function checkAnswer(index, answer) {
-  const accepted = [
-    "1974",
-    "the revenant",
-    "jack",
-    "scorpione",
-    "los angeles",
-    "si",
-    "si",
-    "si",
-    "si",
-    "si",
-    "si",
-    "si",
-    "si",
-    "si",
-    "si",
-    "no",
-    "si",
-    "si",
-    "si",
-    "si",
-    "si",
-    "si",
-    "si",
-    "no",
-    "si"
-  ];
+  const questions = [
+    "Agatha Christie è nata Prima o Dopo il 1900? (Rispondere solo Prima o Dopo)",
+    "La famosa serie TV 'Poirot' ha Più o Meno di 50 episodi? (Rispondere con Più o Meno)",
+    "Agatha Christie ha scritto Più o Meno di 40 romanzi con protagonista Poirot? (Rispondere con Più o Meno)",
+    "Quale famosa investigatrice, creata da Agatha Christie, fu interpretata da Angela Lansbury nel film Assassinio allo specchio? (Scrivere il titolo e il cognome, entrambi in maiuscolo)",
+    "Il secondo marito di Agatha Christie faceva la stessa professione di Indiana Jones, cioè quale? (Rispondere con il nome del lavoro in maiuscolo, per esempio 'Operaio')",
+    "Agatha Christie ha mai scritto romanzi che non siano gialli? (Rispondere solo Sì o No)",
+    "Come si chiama l'ultimo romanzo con protagonista Poirot?",
+    "Agatha Christie risulta essere il secondo scrittore (maschile inteso come neutrale) inglese più tradotto nella storia. Il primo è un famosissimo drammaturgo, chi? (Rispondere con nome e cognome, entrambi maiuscoli. Attenti allo spelling)",
+    "Poirot è francese? (Rispondere solo con Sì o No)",
+    "Nella trasposizione cinematografica della sua opera 'Testimone d'accusa' recita il padre di una famosa cantante statunitense-italiana. Chi è questa cantante, che sposò un altro famoso cantante italiano? (Rispondere con Nome e Cognome)",
+    "Agatha Christie ha vissuto più o meno di 80 anni? (Rispondere solo Più o Meno)",
+    "Il primo adattamento cinematrografico di 'Assassinio sull'Oriente Express' ricevette 6 nomination all'Oscar. Quanti ne vinse? (Rispondere solo con il numero)",
+    "Il suo romanzo più venduto è 'Assassinio sull'Orient Express'? (Rispondere solo con Sì o No)",
+    "Il primo adattamento cinematrografico di 'Assassinio sul Nilo' vede tra le attrici la famosa Angela Lansbury, conosciuta in Italia per quale serie tv trasmessa su Rete 4? (Scrivere il titolo italiano della serie, solo la prima lettera del nome della serie deve essere maiuscola)",
+    "Agatha Christie è nata nella contea della Cornovaglia o del Devon? (Rispondere solo con Cornovaglia o Devon)",
+    "Nell'ultimo suo romanzo, Poirot muore? (Rispondere solo con Sì o No)"
+];
+
+const answers = [
+    "Prima",
+    "Più",
+    "Meno",
+    "Miss Marple",
+    "Archeologo",
+    "Sì",
+    "Sipario",
+    "William Shakespeare",
+    "No",
+    "Romina Power",
+    "Più",
+    "1",
+    "No",
+    "La signora in giallo",
+    "Devon",
+    "Sì"
+];
 
   return answer.includes(accepted[index]);
 }
