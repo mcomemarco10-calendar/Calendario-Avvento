@@ -7,7 +7,7 @@
 <title>Puzzle Quiz</title>
 
 <style>
-  body {
+body {
     font-family: Arial, sans-serif;
     background: #f5f5f5;
     display: flex;
@@ -15,39 +15,47 @@
     align-items: center;
     margin: 0;
     padding: 20px;
-  }
+}
 
-  h1 { margin-bottom: 10px; }
+h1 {
+    margin-bottom: 10px;
+}
 
-  #puzzle-container {
+#puzzle-container {
     position: relative;
     width: 400px;
     height: 400px;
     overflow: hidden;
     border: 2px solid #ccc;
-  }
+}
 
-  .piece {
+#puzzle-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: center;
+    transition: transform 0.4s;
+}
+
+.piece {
     position: absolute;
     width: 25%;
     height: 25%;
     cursor: pointer;
     border: 1px solid white;
-    background-size: 400% 400%;
-    background-repeat: no-repeat;
-  }
+}
 
-  .correct {
+.correct {
     opacity: 0;
     pointer-events: none;
-  }
+}
 
-  .wrong {
+.wrong {
     background-color: #2c2c2c !important;
     pointer-events: none;
-  }
+}
 
-  #question-box {
+#question-box {
     margin-top: 15px;
     padding: 15px;
     background: white;
@@ -56,19 +64,19 @@
     width: 300px;
     text-align: center;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  }
+}
 
-  button {
+button {
     padding: 6px 12px;
     margin: 5px;
     cursor: pointer;
-  }
+}
 
-  input {
+input {
     width: 90%;
     padding: 6px;
     margin-top: 8px;
-  }
+}
 </style>
 </head>
 
@@ -76,95 +84,112 @@
 
 <h1>🧩 Puzzle Quiz</h1>
 
-<!-- 🔒 No full image is shown -->
-<div id="puzzle-container"></div>
+<div id="puzzle-container">
+    <img id="puzzle-img" src="immagine.jpg">
+</div>
 
 <div id="question-box">
-  <p id="question-text"></p>
-  <input id="answer-input" type="text" placeholder="Scrivi la risposta..." />
-  <br>
-  <button id="confirm-btn">Conferma</button>
-  <button id="cancel-btn">Annulla</button>
+    <p id="question-text"></p>
+    <input id="answer-input" type="text" placeholder="Scrivi la risposta..." />
+    <br>
+    <button id="confirm-btn">Conferma</button>
+    <button id="cancel-btn">Annulla</button>
 </div>
 
 <script>
-  // Questions and answers remain visible in source (normal)
-  const questions = [
+const questions = [
     "La costruzione del Tower Bridge é iniziata prima o dopo del 1880?",
     "Chi è il sovrano del Regno Unito più anziano di sempre al momento dell'insediamento?",
     "Compreso il Regno Unito, quanti sono attualmente i Reami del Commonwealth",
     "Chi, oltre Sherlock Holmes, abita in un famoso 221B?",
     "Quanti anni sono passati (in UK) dalla prima all'ultima stagione di Sherlock?",
-    "Il Big Ben è alto più o meno di 100 metri?",
+    "Il Big Ben è alto più o meno di 100 metri? ",
     "Con quale nome è conosciuto il grattacielo di Londra '30 St Mary Axe'?",
     "Come era soprannominata (in inglese) Margaret Thatcher?",
     "Con quale nome è conosciuto il grattacielo di Londra '20 Fenchurch Street'",
-    "Quale Premio Nobel ha vinto Churchill? (Solo categoria)",
+    "Quale Premio Nobel ha vinto Churchill? (Mettere solo la categoria)",
     "Quale animale è la mascotte della Torre di Londra?",
     "Che parte della carne viene fatto alla 'Wellington'?",
     "Quale è il grattacielo più alto di Londra?",
     "Quante stagioni sono di The Crown?",
     "Che titolo ha l'erede al trono Britannico?",
     "Quanti figli ha William?"
-  ];
+];
 
-  const answers = [
-    "Dopo","Re Carlo III","15","Dr. House","7","Meno",
-    "Il cetriolino","The iron lady","The walkie talkie",
-    "Letteratura","Corvo","Filetto","The shard","6",
-    "Principe di Galles","3"
-  ];
+const answers = [
+    "Dopo",
+    "Re Carlo III",
+    "15",
+    "Dr. House",
+    "7",
+    "Meno",
+    "Il cetriolino",
+    "The iron lady",
+    "The walkie talkie ",
+    "Letteratura",
+    "Corvo",
+    "Filetto",
+    "The shard",
+    "6",
+    "Principe di Galles",
+    "3"
+];
 
-  const puzzleContainer = document.getElementById("puzzle-container");
-  const questionBox = document.getElementById("question-box");
-  const questionText = document.getElementById("question-text");
-  const answerInput = document.getElementById("answer-input");
-  let selectedPieceIndex = null;
+const puzzleContainer = document.getElementById("puzzle-container");
+const questionBox = document.getElementById("question-box");
+const questionText = document.getElementById("question-text");
+const answerInput = document.getElementById("answer-input");
+let selectedPieceIndex = null;
 
-  // Create puzzle pieces from one hidden image
-  for (let i = 0; i < 16; i++){
+function randomColor(){
+    const colors = ["#002233", "#001122", "#112233", "#331144", "#222233", "#000033"];
+    return colors[Math.floor(Math.random()*colors.length)];
+}
+
+for (let i = 0; i < 16; i++){
     const piece = document.createElement("div");
     piece.classList.add("piece");
-
-    const x = (i % 4) * -25;
-    const y = Math.floor(i / 4) * -25;
-
-    piece.style.backgroundImage = "url('Volto.jpg')";
-    piece.style.backgroundPosition = `${x}% ${y}%`;
+    piece.style.backgroundColor = randomColor();
     piece.style.top = Math.floor(i / 4) * 25 + "%";
     piece.style.left = (i % 4) * 25 + "%";
 
     piece.addEventListener("click", ()=> openQuestion(i));
     puzzleContainer.appendChild(piece);
-  }
+}
 
-  function openQuestion(index){
+function openQuestion(index){
     selectedPieceIndex = index;
     questionText.textContent = questions[index];
     answerInput.value = "";
     questionBox.style.display = "block";
-  }
+}
 
-  document.getElementById("confirm-btn").addEventListener("click", ()=>{
+document.getElementById("confirm-btn").addEventListener("click", ()=>{
     const userAnswer = answerInput.value.trim().toLowerCase();
     const correct = answers[selectedPieceIndex].toLowerCase();
     const pieces = document.getElementsByClassName("piece");
 
     if(userAnswer === correct){
-      pieces[selectedPieceIndex].classList.add("correct");
+        pieces[selectedPieceIndex].classList.add("correct");
     } else {
-      pieces[selectedPieceIndex].classList.add("wrong");
+        pieces[selectedPieceIndex].classList.add("wrong");
     }
 
     questionBox.style.display = "none";
-  });
+});
 
-  document.getElementById("cancel-btn").addEventListener("click", ()=>{
+document.getElementById("cancel-btn").addEventListener("click", ()=>{
     questionBox.style.display = "none";
-  });
+});
+
+// Fixed rotation
+const img = document.getElementById("puzzle-img");
+const angles = [0, 90, 180, 270];
+img.style.transform = `rotate(${angles[Math.floor(Math.random()*angles.length)]}deg)`;
 </script>
 
 </body>
 </html>
+
 
 
