@@ -5,7 +5,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Puzzle Quiz</title>
-
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -16,14 +15,12 @@ body {
     margin: 0;
     padding: 20px;
 }
-
 #puzzle-container {
     position: relative;
     width: 400px;
     height: 400px;
     border: 2px solid #ccc;
 }
-
 .piece {
     position: absolute;
     width: 25%;
@@ -33,13 +30,11 @@ body {
     background-color: #001122;
     background-size: 400px 400px;
     background-repeat: no-repeat;
-    transition: transform 0.3s;
 }
-
 .revealed {
     background-image: url("https://raw.githubusercontent.com/mcomemarco10-calendar/Calendario-Avvento/main/Volto.jpg");
+    cursor: default; /* Non cliccabile */
 }
-
 #question-box {
     margin-top: 15px;
     padding: 15px;
@@ -53,11 +48,8 @@ body {
 </style>
 </head>
 <body>
-
 <h1>🧩 Puzzle Quiz</h1>
-
 <div id="puzzle-container"></div>
-
 <div id="question-box">
     <p id="question-text"></p>
     <input id="answer-input" type="text" placeholder="Scrivi la risposta…">
@@ -65,7 +57,6 @@ body {
     <button id="confirm-btn">Conferma</button>
     <button id="cancel-btn">Annulla</button>
 </div>
-
 <script>
 const questions = [
     "Agatha Christie è nata Prima o Dopo il 1900? (Rispondere solo Prima o Dopo)",
@@ -85,45 +76,33 @@ const questions = [
     "Agatha Christie è nata nella contea della Cornovaglia o del Devon? (Rispondere solo con Cornovaglia o Devon)",
     "Nell'ultimo suo romanzo, Poirot muore? (Rispondere solo con Sì o No)"
 ];
-
 const answers = [
-    "Prima",
-    "Più",
-    "Meno",
-    "Miss Marple",
-    "Archeologo",
-    "Sì",
-    "Sipario",
-    "William Shakespeare",
-    "No",
-    "Romina Power",
-    "Più",
-    "1",
-    "No",
-    "La signora in giallo",
-    "Devon",
-    "Sì"
+    "Prima", "Più", "Meno", "Miss Marple", "Archeologo", "Sì", "Sipario",
+    "William Shakespeare", "No", "Romina Power", "Più", "1", "No",
+    "La signora in giallo", "Devon", "Sì"
 ];
 
 const container = document.getElementById("puzzle-container");
 let selectedIndex = null;
-const attempted = {}; // tiene traccia delle domande già tentate
 
 // CREA 16 PEZZI
 for (let i = 0; i < 16; i++) {
     const piece = document.createElement("div");
     piece.classList.add("piece");
-
     const row = Math.floor(i / 4);
     const col = i % 4;
-
     piece.dataset.index = i;
     piece.dataset.position = `-${col * 100}px -${row * 100}px`;
-
     piece.style.top = (row * 25) + "%";
     piece.style.left = (col * 25) + "%";
 
-    piece.addEventListener("click", () => openQuestion(i, piece));
+    piece.addEventListener("click", () => {
+        // Controlla se il pezzo è già rivelato
+        if (!piece.classList.contains("revealed")) {
+            openQuestion(i, piece);
+        }
+    });
+
     container.appendChild(piece);
 }
 
@@ -133,7 +112,6 @@ const qText = document.getElementById("question-text");
 const answerField = document.getElementById("answer-input");
 
 function openQuestion(i, piece) {
-    if (attempted[i]) return; // blocca tentativi se già sbagliata
     selectedIndex = i;
     qText.textContent = questions[i];
     answerField.value = "";
@@ -144,21 +122,14 @@ function openQuestion(i, piece) {
 document.getElementById("confirm-btn").addEventListener("click", () => {
     const user = answerField.value.trim().toLowerCase();
     const correct = answers[selectedIndex].toLowerCase();
-
     const piece = document.querySelector(`.piece[data-index="${selectedIndex}"]`);
 
     if (user === correct) {
         piece.classList.add("revealed");
         piece.style.backgroundPosition = piece.dataset.position;
         piece.style.backgroundColor = "transparent";
-
-        // Ruota randomicamente di 90, 180 o 270 gradi
-        const rotations = [90, 180, 270];
-        const randomRotation = rotations[Math.floor(Math.random() * rotations.length)];
-        piece.style.transform = `rotate(${randomRotation}deg)`;
     } else {
         piece.style.opacity = "0.4";
-        attempted[selectedIndex] = true; // segna come tentata e sbagliata
     }
 
     box.style.display = "none";
@@ -168,9 +139,9 @@ document.getElementById("cancel-btn").addEventListener("click", () => {
     box.style.display = "none";
 });
 </script>
-
 </body>
 </html>
+
 
 
 
