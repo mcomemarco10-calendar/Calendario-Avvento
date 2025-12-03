@@ -31,9 +31,12 @@ body {
     background-size: 400px 400px;
     background-repeat: no-repeat;
 }
+.answered {
+    cursor: default; /* Non cliccabile */
+}
 .revealed {
     background-image: url("https://raw.githubusercontent.com/mcomemarco10-calendar/Calendario-Avvento/main/Volto.jpg");
-    cursor: default; /* Non cliccabile */
+    background-size: 400px 400px;
 }
 #question-box {
     margin-top: 15px;
@@ -97,8 +100,7 @@ for (let i = 0; i < 16; i++) {
     piece.style.left = (col * 25) + "%";
 
     piece.addEventListener("click", () => {
-        // Controlla se il pezzo è già rivelato
-        if (!piece.classList.contains("revealed")) {
+        if (!piece.classList.contains("answered")) {
             openQuestion(i, piece);
         }
     });
@@ -124,12 +126,15 @@ document.getElementById("confirm-btn").addEventListener("click", () => {
     const correct = answers[selectedIndex].toLowerCase();
     const piece = document.querySelector(`.piece[data-index="${selectedIndex}"]`);
 
+    // Segna il pezzo come già risposto
+    piece.classList.add("answered");
+
     if (user === correct) {
         piece.classList.add("revealed");
         piece.style.backgroundPosition = piece.dataset.position;
         piece.style.backgroundColor = "transparent";
     } else {
-        piece.style.opacity = "0.4";
+        piece.style.opacity = "0.4"; // Mostra errore
     }
 
     box.style.display = "none";
@@ -141,6 +146,7 @@ document.getElementById("cancel-btn").addEventListener("click", () => {
 </script>
 </body>
 </html>
+
 
 
 
