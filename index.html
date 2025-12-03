@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Puzzle Quiz</title>
 
 <style>
@@ -15,34 +15,18 @@
         align-items: center;
         margin: 0;
         padding: 20px;
+        user-select: none;
     }
 
-    h1 {
-        margin-bottom: 10px;
-    }
+    h1 { margin-bottom: 10px; }
 
-    /* Contenitore puzzle */
     #puzzle-container {
         position: relative;
         width: 400px;
         height: 400px;
         border: 2px solid #ccc;
         overflow: hidden;
-    }
-
-    /* IMMAGINE TOTALMENTE INVISIBILE */
-    #puzzle-img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-
-        /* Nascondiamo tutto completamente */
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
+        background: black;
     }
 
     .piece {
@@ -51,17 +35,18 @@
         height: 25%;
         cursor: pointer;
         border: 1px solid white;
+        background-color: #001122;  /* colore iniziale */
+        background-size: 400px 400px;
+        background-repeat: no-repeat;
         transition: opacity 0.3s;
     }
 
     .correct {
-        opacity: 0;
-        pointer-events: none;
+        background-color: transparent !important;
     }
 
     .wrong {
         background-color: #2c2c2c !important;
-        pointer-events: none;
     }
 
     #question-box {
@@ -76,17 +61,16 @@
     }
 </style>
 </head>
+
 <body>
 
 <h1>🧩 Puzzle Quiz</h1>
 
-<div id="puzzle-container">
-    <img id="puzzle-img" src="Volto.jpg">
-</div>
+<div id="puzzle-container"></div>
 
 <div id="question-box">
     <p id="question-text"></p>
-    <input id="answer-input" type="text" placeholder="Scrivi la risposta...">
+    <input id="answer-input" type="text" placeholder="Scrivi la risposta..." />
     <br>
     <button id="confirm-btn">Conferma</button>
     <button id="cancel-btn">Annulla</button>
@@ -94,15 +78,15 @@
 
 <script>
 const questions = [
-    "La costruzione del Tower Bridge é iniziata prima o dopo del 1880?",
+    "La costruzione del Tower Bridge è iniziata prima o dopo del 1880?",
     "Chi è il sovrano del Regno Unito più anziano di sempre al momento dell'insediamento?",
     "Compreso il Regno Unito, quanti sono attualmente i Reami del Commonwealth",
     "Chi, oltre Sherlock Holmes, abita in un famoso 221B?",
     "Quanti anni sono passati (in UK) dalla prima all'ultima stagione di Sherlock?",
-    "Il Big Ben è alto più o meno di 100 metri?",
+    "Il Big Ben è alto più o meno di 100 metri? ",
     "Con quale nome è conosciuto il grattacielo di Londra '30 St Mary Axe'?",
     "Come era soprannominata (in inglese) Margaret Thatcher?",
-    "Con quale nome è conosciuto il grattacielo di Londra '20 Fenchurch Street'?",
+    "Con quale nome è conosciuto il grattacielo di Londra '20 Fenchurch Street'",
     "Quale Premio Nobel ha vinto Churchill? (Mettere solo la categoria)",
     "Quale animale è la mascotte della Torre di Londra?",
     "Che parte della carne viene fatto alla 'Wellington'?",
@@ -113,63 +97,61 @@ const questions = [
 ];
 
 const answers = [
-    "Dopo",
-    "Re Carlo III",
-    "15",
-    "Dr. House",
-    "7",
-    "Meno",
-    "Il cetriolino",
-    "The iron lady",
-    "The walkie talkie",
-    "Letteratura",
-    "Corvo",
-    "Filetto",
-    "The shard",
-    "6",
-    "Principe di Galles",
-    "3"
+    "dopo","re carlo iii","15","dr. house","7","meno",
+    "il cetriolino","the iron lady","the walkie talkie","letteratura",
+    "corvo","filetto","the shard","6","principe di galles","3"
 ];
 
-const puzzleContainer = document.getElementById("puzzle-container");
+const puzzle = document.getElementById("puzzle-container");
 const questionBox = document.getElementById("question-box");
 const questionText = document.getElementById("question-text");
 const answerInput = document.getElementById("answer-input");
 
-let selectedIndex = null;
+let selectedPieceIndex = null;
 
-function randomColor() {
-    const palette = ["#000022", "#001133", "#112244", "#221133", "#000033", "#001122"];
-    return palette[Math.floor(Math.random() * palette.length)];
-}
+const IMG = "Volto.jpg";
+const SIZE = 400;
+const PIECES = 4;
 
 for (let i = 0; i < 16; i++) {
+
+    const row = Math.floor(i / 4);
+    const col = i % 4;
+
     const piece = document.createElement("div");
-    piece.classList.add("piece");
-    piece.style.backgroundColor = randomColor();
-    piece.style.top = Math.floor(i / 4) * 25 + "%";
-    piece.style.left = (i % 4) * 25 + "%";
+    piece.className = "piece";
 
-    piece.addEventListener("click", () => openQuestion(i));
+    // posizione nel puzzle
+    piece.style.top = (row * 25) + "%";
+    piece.style.left = (col * 25) + "%";
 
-    puzzleContainer.appendChild(piece);
-}
+    // coordinate del ritaglio
+    const bgX = -(col * SIZE / PIECES);
+    const bgY = -(row * SIZE / PIECES);
 
-function openQuestion(i) {
-    selectedIndex = i;
-    questionText.textContent = questions[i];
-    answerInput.value = "";
-    questionBox.style.display = "block";
+    piece.style.backgroundImage = `url('${IMG}')`;
+    piece.style.backgroundPosition = `${bgX}px ${bgY}px`;
+
+    piece.addEventListener("click", () => {
+        selectedPieceIndex = i;
+        questionText.textContent = questions[i];
+        answerInput.value = "";
+        questionBox.style.display = "block";
+    });
+
+    puzzle.appendChild(piece);
 }
 
 document.getElementById("confirm-btn").addEventListener("click", () => {
     const user = answerInput.value.trim().toLowerCase();
-    const correct = answers[selectedIndex].toLowerCase();
+    const correct = answers[selectedPieceIndex].toLowerCase();
+    const piece = puzzle.children[selectedPieceIndex];
 
-    const pieces = document.getElementsByClassName("piece");
-
-    if (user === correct) pieces[selectedIndex].classList.add("correct");
-    else pieces[selectedIndex].classList.add("wrong");
+    if (user === correct) {
+        piece.classList.add("correct");  // rivela l’immagine
+    } else {
+        piece.classList.add("wrong");
+    }
 
     questionBox.style.display = "none";
 });
@@ -181,6 +163,7 @@ document.getElementById("cancel-btn").addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
 
