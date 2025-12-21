@@ -61,31 +61,28 @@ body {
     <button id="cancel-btn">Annulla</button>
 </div>
 <script>
-const questions = [
-    "'La gazza' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Mattino Gelido' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Iris' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Vista di un porto' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Ritratto di musico' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Bacco' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Lillà al sole' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Cipressi' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Roma vista dal Vaticano' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Autoritratto senza barba' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Il Parlamento di Londra' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Alberi e sottobosco' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Ninfee bianche' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Il molo di Calais' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Roma moderna - Campo Vaccino' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
-     "'Madonna Litta' è un dipinto di Monet, Da Vinci, Van Gogh o Turner? (Rispondere solo con 'Monet' o 'Da Vinci' o 'Van Gogh' o Turner')",
+ "'Le due sorelle' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+     "'Veduta di Auvers' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "'La cantante di strada' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "'La lettura' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "' La madre dell'artista' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "'Veduta dell'Estaque e del golfo di Marsiglia' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "'Giardino innevato' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "'La prugna' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "'Due fratelli' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "'I tre musici' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "'Paesaggio in Martinica' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "'Le Château Noir' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "'Van Gogh mentre dipinge girasoli' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "'Les demoiselles d'Avignon' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "'Il pifferaio' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
+    "'La visione dopo il sermone' è un dipinto di Picasso, Cèzanne, Gauguin o Manet? (Rispondere solo con 'Picasso' o 'Cèzanne' o 'Gauguin' o Manet')",
 
   
 ];
 const answers = [
-    "Monet", "Turner", "Van Gogh", "Monet", "Da Vinci", "Da Vinci", "Monet", "Van Gogh", "Turner",
-    "Van Gogh", "Monet", "Van Gogh", "Monet", "Turner", "Turner", "Da Vinci"
-    
-];
+    "Picasso", "Cèzanne", "Manet", "Manet", "Gauguin", "Cèzanne", "Gauguin", "Manet", "Picasso",
+    "Picasso", "Gauguin", "Cèzanne", "Gauguin", "Picasso", "Manet", "Gauguin"
 
 const container = document.getElementById("puzzle-container");
 let selectedIndex = null;
